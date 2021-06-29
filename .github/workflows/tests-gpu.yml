@@ -1,8 +1,8 @@
+name: Tests on GPU
 # The name is short because we mostly care how it appears in the pull request
 # "checks" dialogue box - it looks like
 #     Tests on GPU / ubuntu-latest, python-3.9, defaults
 # or similar.
-name: Tests on GPU
 
 on:
     [push, pull_request]
@@ -18,7 +18,7 @@ defaults:
 jobs:
   cases:
     name: ${{ matrix.os }}, ${{ matrix.case-name }}
-    runs-on: [self-hosted, gpu]
+    runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
@@ -29,10 +29,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - name: Setup Python
+        uses: conda-incubator/setup-miniconda@v2
+        env:
+          CONDA: /home/runnerx/miniconda3
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
+          miniconda-version: "latest"
 
       - name: Install QuTiP from GitHub
         run: |
